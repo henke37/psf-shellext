@@ -3,6 +3,7 @@
 #include "guids.h"
 #include <string.h>
 #include <tchar.h>
+#include "globals.h"
 
 DllExport HRESULT __stdcall DllRegisterServer(void);
 DllExport HRESULT __stdcall DllUnregisterServer(void);
@@ -22,19 +23,25 @@ DllExport HRESULT __stdcall DllUnregisterServer(void);
 
 HRESULT __stdcall DllRegisterServer(void) {
 	LSTATUS status;
-
+	//HRESULT hresult;
 	
-	TCHAR *dllPath;
-	DWORD dllPathLen;//include the terminator, must be in octets
-
-	TCHAR *guidStr;
-	DWORD guidStrLen;//include the terminator, must be in octets
+	TCHAR dllPath[MAX_PATH];
+	//include the terminator, must be in octets
+	DWORD dllPathLen=(GetModuleFileName(dllHinstance,dllPath,MAX_PATH)+1)*sizeof(TCHAR);
+	
+#define guidStrMaxLen 40
+	TCHAR guidStr[guidStrMaxLen];
+	
+	//include the terminator, must be in octets
+	DWORD guidStrLen=StringFromGUID2(PropExtCL_GUID,guidStr,guidStrMaxLen)*sizeof(TCHAR);
 
 	{
-		TCHAR *clsIdKeyName;
+		TCHAR clsIdKeyName[200];
 		HKEY clsIdKey;
-		//HKEY_LOCAL_MACHINE\Software\Classes
-		status=RegCreateKeyEx(HKEY_CLASSES_ROOT,clsIdKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&clsIdKey,NULL);
+
+		wsprintf(clsIdKeyName,TEXT("Software\\Classes\\%s"),guidStr);
+
+		status=RegCreateKeyEx(HKEY_LOCAL_MACHINE,clsIdKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&clsIdKey,NULL);
 		if(status!=ERROR_SUCCESS) {
 			return HRESULT_FROM_WIN32(status);
 		}
@@ -47,10 +54,10 @@ HRESULT __stdcall DllRegisterServer(void) {
 	}
 
 	{
-		TCHAR *clsTypeKeyName;
+		TCHAR *clsTypeKeyName=TEXT("Software\\Classes\\MiniNCSFFile");
 		HKEY clsTypeKey;
 
-		status=RegCreateKeyEx(HKEY_CLASSES_ROOT,clsTypeKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&clsTypeKey,NULL);
+		status=RegCreateKeyEx(HKEY_LOCAL_MACHINE,clsTypeKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&clsTypeKey,NULL);
 		if(status!=ERROR_SUCCESS) {
 			return HRESULT_FROM_WIN32(status);
 		}
@@ -62,7 +69,22 @@ HRESULT __stdcall DllRegisterServer(void) {
 	}
 
 	{
-		TCHAR *propHandlerKeyName=TEXT("Software/Microsoft/WindowsCurrentVersion/PropertySystem/PropertyHandlers");
+		TCHAR *clsExtKeyName=TEXT("Software\\Classes\\.MiniNCSF");
+		HKEY clsExtKey;
+
+		status=RegCreateKeyEx(HKEY_LOCAL_MACHINE,clsExtKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&clsExtKey,NULL);
+		if(status!=ERROR_SUCCESS) {
+			return HRESULT_FROM_WIN32(status);
+		}
+
+		RegSetKeyValueStringLiteral(clsExtKey,"","","MiniNCSFFile");
+
+
+		RegCloseKey(clsExtKey);
+	}
+
+	{
+		TCHAR *propHandlerKeyName=TEXT("Software\\Microsoft\\WindowsCurrentVersion\\PropertySystem\\PropertyHandlers");
 		HKEY phKey;
 		status=RegOpenKeyEx(HKEY_LOCAL_MACHINE,propHandlerKeyName,0,KEY_ALL_ACCESS,&phKey);
 		if(status!=ERROR_SUCCESS) {
@@ -75,7 +97,7 @@ HRESULT __stdcall DllRegisterServer(void) {
 	}
 
 	{
-		TCHAR *shextApprovedKeyName=TEXT("Software/Microsoft/WindowsCurrentVersion/Shell Extensions/Approved");
+		TCHAR *shextApprovedKeyName=TEXT("Software\\Microsoft\\WindowsCurrentVersion\\Shell Extensions\\Approved");
 		HKEY shextApprovedKey;
 		status=RegOpenKeyEx(HKEY_LOCAL_MACHINE,shextApprovedKeyName,0,KEY_ALL_ACCESS,&shextApprovedKey);
 		if(status!=ERROR_SUCCESS) {
@@ -88,7 +110,7 @@ HRESULT __stdcall DllRegisterServer(void) {
 	}
 
 	{
-		TCHAR *kindKeyName;
+		TCHAR *kindKeyName=TEXT("Software\\Microsoft\\WindowsCurrentVersion\\Explorer\\KindMap");;
 		HKEY kindKey;
 
 		status=RegCreateKeyEx(HKEY_CLASSES_ROOT,kindKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&kindKey,NULL);
@@ -101,6 +123,15 @@ HRESULT __stdcall DllRegisterServer(void) {
 
 		RegCloseKey(kindKey);
 	}
+
+	/*
+	{
+		WCHAR propPath[MAX_PATH];
+		hresult=PSRegisterPropertySchema(propPath);
+		if(!SUCCEEDED(hresult)) {
+			return hresult;
+		}
+	}*/
 	
 	SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,NULL,NULL);
 	return S_OK;

@@ -2,7 +2,7 @@
 #define EXTCL_H
 
 #include "common.h"
-#include "comGlobals.h"
+#include "globals.h"
 #include <assert.h>
 #include <Propsys.h>
 

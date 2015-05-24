@@ -8,7 +8,7 @@
 #include <Windows.h>
 #include <Unknwn.h>
 
-#define DllExport   __declspec( dllexport ) 
+#define DllExport extern "C" __declspec( dllexport ) 
 
 
 #endif

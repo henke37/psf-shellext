@@ -24,9 +24,6 @@
     <ClCompile Include="ExtClCom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="extCl_IInitWithStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,18 +39,21 @@
     <ClCompile Include="extCl_SaveProperties.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="comGlobals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="extCl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="guids.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

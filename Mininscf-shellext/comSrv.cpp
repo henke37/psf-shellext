@@ -1,5 +1,5 @@
 #include "common.h"
-#include "comGlobals.h"
+#include "globals.h"
 #include "extCl.h"
 #include <new>
 #include <assert.h>

@@ -4,7 +4,12 @@ HRESULT PropExtCL::GetAt(DWORD iProp, PROPERTYKEY *pkey) { return propCache->Get
 HRESULT PropExtCL::GetCount(DWORD *cProps) { return propCache->GetCount(cProps); }
 HRESULT PropExtCL::GetValue(REFPROPERTYKEY key,PROPVARIANT *pv) { return propCache->GetValue(key,pv); }
 HRESULT PropExtCL::SetValue(REFPROPERTYKEY key,REFPROPVARIANT propvar) {
-	if(IsPropertyWritable(key)==S_FALSE) return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
+	if(readOnlyMode) {
+		return STG_E_ACCESSDENIED;
+	}
+	if(IsPropertyWritable(key)==S_FALSE) {
+		return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
+	}
 	return propCache->SetValue(key,propvar);
 }
 

@@ -85,7 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="comSrv.cpp" />
-    <ClCompile Include="dllmain.c" />
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ExtClCom.cpp" />
     <ClCompile Include="extCl_IInitWithStream.cpp" />
     <ClCompile Include="extCl_IPropertyStore.cpp" />
@@ -95,7 +95,7 @@
     <ClCompile Include="register.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="comGlobals.h" />
+    <ClInclude Include="globals.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="extCl.h" />
     <ClInclude Include="guids.h" />

@@ -12,14 +12,18 @@ DllExport HRESULT __stdcall DllUnregisterServer(void);
 	(_tcslen(TStr)+1)*sizeof(TCHAR))
 
 #define RegSetKeyValueStringLiteral( baseKey, subkey, valueName, valueData) \
-	RegSetKeyValue(baseKey,TEXT(subkey),TEXT(valueName), REG_SZ, \
+	RegSetKeyValue(baseKey,subkey,valueName, REG_SZ, \
 	TEXT(valueData), tcharStrByteLen(TEXT(valueData));
 #define RegSetKeyValueString( baseKey, subKey, valueName, valueData, valueDataLen) \
-	RegSetKeyValue(baseKey,TEXT(subKey),TEXT(valueName), REG_SZ, \
+	RegSetKeyValue(baseKey,subKey,valueName, REG_SZ, \
 	valueData, valueDataLen);
 
-#define FILEEXT ".mininscf"
-#define EXTDESC "Mini NSCF Proxy Stub file Property handler"
+#define EXTDESC "PCF File Property handler"
+
+#define extCount 3
+static const LPTCH extensions[extCount]= {
+	TEXT(".ncsf"), TEXT(".minincsf"), TEXT(".ncsflib")
+};
 
 HRESULT __stdcall DllRegisterServer(void) {
 	LSTATUS status;
@@ -46,15 +50,15 @@ HRESULT __stdcall DllRegisterServer(void) {
 			return HRESULT_FROM_WIN32(status);
 		}
 
-		RegSetKeyValueStringLiteral(clsIdKey,"","",EXTDESC);
+		RegSetKeyValueStringLiteral(clsIdKey,NULL,NULL,EXTDESC);
 		RegSetKeyValue(clsIdKey,TEXT("InProcServer32"),NULL,REG_SZ,dllPath,dllPathLen);
-		RegSetKeyValueStringLiteral(clsIdKey,"InProcServer32","ThreadingModel","Apartment");
+		RegSetKeyValueStringLiteral(clsIdKey,TEXT("InProcServer32"),TEXT("ThreadingModel"),"Apartment");
 
 		RegCloseKey(clsIdKey);
 	}
 
 	{
-		TCHAR *clsTypeKeyName=TEXT("Software\\Classes\\MiniNCSFFile");
+		TCHAR *clsTypeKeyName=TEXT("Software\\Classes\\PSFFile");
 		HKEY clsTypeKey;
 
 		status=RegCreateKeyEx(HKEY_LOCAL_MACHINE,clsTypeKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&clsTypeKey,NULL);
@@ -62,22 +66,25 @@ HRESULT __stdcall DllRegisterServer(void) {
 			return HRESULT_FROM_WIN32(status);
 		}
 
-		RegSetKeyValueStringLiteral(clsTypeKey,"","","Mini NSCF Proxy Stub file");
+		RegSetKeyValueStringLiteral(clsTypeKey,NULL,NULL,"PCF Sequence file");
 
 
 		RegCloseKey(clsTypeKey);
 	}
 
-	{
-		TCHAR *clsExtKeyName=TEXT("Software\\Classes\\.MiniNCSF");
+	for(unsigned int extIndex=0;extIndex<extCount;++extIndex) {
+		TCHAR clsExtKeyName[120];
 		HKEY clsExtKey;
+		TCHAR *extension=extensions[extIndex];
+
+		wsprintf(clsExtKeyName,TEXT("Software\\Classes\\%s"),extension);
 
 		status=RegCreateKeyEx(HKEY_LOCAL_MACHINE,clsExtKeyName,0,NULL,0,KEY_ALL_ACCESS,NULL,&clsExtKey,NULL);
 		if(status!=ERROR_SUCCESS) {
 			return HRESULT_FROM_WIN32(status);
 		}
 
-		RegSetKeyValueStringLiteral(clsExtKey,"","","MiniNCSFFile");
+		RegSetKeyValueStringLiteral(clsExtKey,NULL,NULL,"PSFFile");
 
 
 		RegCloseKey(clsExtKey);
@@ -91,7 +98,10 @@ HRESULT __stdcall DllRegisterServer(void) {
 			return HRESULT_FROM_WIN32(status);
 		}
 
-		RegSetKeyValueString(phKey,FILEEXT,"",guidStr,guidStrLen);
+		for(unsigned int extIndex=0;extIndex<extCount;++extIndex) {
+			TCHAR *extension=extensions[extIndex];
+			RegSetKeyValue(phKey,extension,NULL,REG_SZ,guidStr,guidStrLen);
+		}
 
 		RegCloseKey(phKey);
 	}
@@ -118,7 +128,10 @@ HRESULT __stdcall DllRegisterServer(void) {
 			return HRESULT_FROM_WIN32(status);
 		}
 
-		RegSetKeyValueStringLiteral(kindKey,"",FILEEXT,"music");
+		for(unsigned int extIndex=0;extIndex<extCount;++extIndex) {
+			TCHAR *extension=extensions[extIndex];
+			RegSetKeyValueStringLiteral(kindKey,NULL,extension,"music");
+		}
 
 
 		RegCloseKey(kindKey);

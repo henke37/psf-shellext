@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<propertyDescriptionList xmlns="http://schemas.microsoft.com/windows/2006/propertydescription">
+	<propertyDescription name="PCF.System" formatID="{F2CCDAAC-FC61-423A-A7BC-BBE6BF738637}" propID="2">
+		<searchInfo maxSize="1" />
+		<labelInfo label="Emulated System" />
+		<typeInfo type="byte" groupingRange="Discrete" isInnate="true" isViewable="true"/>
+		<displayInfo displayType="Enumeration">
+			<enumeratedList>
+				<enum value="1" text="Playstation 1" />
+				<enum value="2" text="Playstation 2" />
+				<enum value="5" text="Nintendo DS" />
+				<enum value="11" text="Sega Saturn" />
+				<enum value="12" text="Sega Dreamcast" />
+				<enum value="13" text="Sega Genesis" />
+				<enum value="33" text="Nintendo 64" />
+				<enum value="34" text="GameBoy Advance" />
+				<enum value="35" text="Super NES" />
+				<enum value="65" text="Capcom QSound" />
+			</enumeratedList>
+		</displayInfo>
+	</propertyDescription>
+
+	<propertyDescription name="PCF.SNSF.SramFill">
+		
+	</propertyDescription>
+	<propertyDescription name="PCF.SNSF.VideoMode">
+		<typeInfo type="String" />
+		<displayInfo displayType="Enumeration">
+			<enumeratedList>
+				<enum value="NTSC" text="NTSC" />
+				<enum value="PAL" text="PAL" />
+			</enumeratedList>
+		</displayInfo>
+	</propertyDescription>
+	<propertyDescription name="PCF.SNSF.MemoryMap">
+		<typeInfo type="String" />
+		<displayInfo displayType="Enumeration">
+			<enumeratedList>
+				<enum value="HiROM" text="HiROM" />
+				<enum value="LoROM" text="LoROM" />
+			</enumeratedList>
+		</displayInfo>
+	</propertyDescription>
+	<propertyDescription name="PCF.USF.EnableCompare">
+		<typeInfo type="Boolean"/>
+	</propertyDescription>
+	<propertyDescription name="PCF.USF.FIFOfull">
+		<typeInfo type="Boolean"/>
+	</propertyDescription>
+	<propertyDescription name="PCF.Mini.Library">
+		<typeInfo type="String" multipleValues="true" />
+	</propertyDescription>
+	<propertyDescription name="PCF.RefreshRate">
+		<typeInfo type="Byte" groupingRange="Discrete" />
+		<displayInfo displayType="Enumeration">
+			<enumeratedList>
+				<enum value="60" text="60 Hz" />
+				<enum value="50" text="50 Hz" />
+			</enumeratedList>
+		</displayInfo>
+	</propertyDescription>
+
+</propertyDescriptionList>

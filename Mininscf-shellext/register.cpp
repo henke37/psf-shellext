@@ -20,9 +20,18 @@ DllExport HRESULT __stdcall DllUnregisterServer(void);
 
 #define EXTDESC "PCF File Property handler"
 
-#define extCount 3
+#define extCount 30
 static const LPTCH extensions[extCount]= {
-	TEXT(".ncsf"), TEXT(".minincsf"), TEXT(".ncsflib")
+	TEXT(".ncsf"), TEXT(".minincsf"), TEXT(".ncsflib"),
+	TEXT(".dsf"), TEXT(".minidsf"), TEXT(".dsflib"),
+	TEXT(".ssf"), TEXT(".minissf"), TEXT(".ssflib"),
+	TEXT(".psf2"), TEXT(".minipsf2"), TEXT(".psf2lib"),
+	TEXT(".psf"), TEXT(".minipsf"), TEXT(".psflib"),
+	TEXT(".psf1"), TEXT(".minipsf1"), TEXT(".psf1lib"),
+	TEXT(".usf"), TEXT(".miniusf"), TEXT(".usflib"),
+	TEXT(".gsf"), TEXT(".minigsf"), TEXT(".gsflib"),
+	TEXT(".snsf"), TEXT(".minisnsf"), TEXT(".snsflib"),
+	TEXT(".qsf"), TEXT(".miniqsf"), TEXT(".qsflib")
 };
 
 HRESULT __stdcall DllRegisterServer(void) {
@@ -151,6 +160,12 @@ HRESULT __stdcall DllRegisterServer(void) {
 }
 
 HRESULT __stdcall DllUnregisterServer(void) {
+
+	/*
+	hresult=PSUnregisterPropertySchema( _In_ PCWSTR pszPath	);
+	if(!SUCCEEDED(hresult)) {
+		return hresult;
+	}*/
 
 	SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,NULL,NULL);
 	return S_OK;

@@ -6,6 +6,8 @@
 #include <assert.h>
 #include <Propsys.h>
 
+class PsfParser;
+
 class PropExtCL : IUnknown, IInitializeWithStream, IPropertyStore, IPropertyStoreCapabilities {
 	~PropExtCL();
 
@@ -56,6 +58,7 @@ private:
 	ULONG useCount;
 	IStream *contentStream;
 	IPropertyStoreCache *propCache;
+	PsfParser *parser;
 };
 
 #endif EXTCL_H

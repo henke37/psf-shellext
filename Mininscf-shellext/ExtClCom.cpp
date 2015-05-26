@@ -1,6 +1,7 @@
 #include "extCl.h"
+#include "psfParser.h"
 
-PropExtCL::PropExtCL() : useCount(1), initialized(false), contentStream(nullptr), propCache(nullptr) {
+PropExtCL::PropExtCL() : useCount(1), initialized(false), contentStream(nullptr), propCache(nullptr), parser(nullptr) {
 	++dllUseCount;
 }
 
@@ -10,6 +11,9 @@ PropExtCL::~PropExtCL() {
 	}
 	if(propCache) {
 		propCache->Release();
+	}
+	if(parser) {
+		delete parser;
 	}
 
 	assert(useCount==0);

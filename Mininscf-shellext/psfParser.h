@@ -23,6 +23,7 @@ public:
 private:
 	IStream *stream;
 	HRESULT parseTags();
+	HRESULT saveTags();
 
 	ULARGE_INTEGER tagStart;
 

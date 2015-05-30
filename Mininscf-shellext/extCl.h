@@ -5,6 +5,8 @@
 #include "globals.h"
 #include <assert.h>
 #include <Propsys.h>
+#include <string>
+#include <cstdint>
 
 class PsfParser;
 
@@ -13,6 +15,23 @@ class PropExtCL : IUnknown, IInitializeWithStream, IPropertyStore, IPropertyStor
 
 	HRESULT LoadProperties();
 	HRESULT SaveProperties();
+
+	HRESULT storeTagAsProp(const std::string &tagName, const std::string &tagValue);
+	HRESULT storePropAsTag(REFPROPERTYKEY key);
+
+	HRESULT SetValue(REFPROPERTYKEY key,const std::string &value);
+	HRESULT SetValue(REFPROPERTYKEY key,const std::wstring &value);
+	HRESULT SetValue(REFPROPERTYKEY key,uint64_t);
+	HRESULT SetValue(REFPROPERTYKEY key,int64_t);
+	HRESULT SetValue(REFPROPERTYKEY key,uint32_t);
+	HRESULT SetValue(REFPROPERTYKEY key,int32_t);
+	HRESULT SetValue(REFPROPERTYKEY key,uint16_t);
+	HRESULT SetValue(REFPROPERTYKEY key,int16_t);
+	HRESULT SetValue(REFPROPERTYKEY key,uint8_t);
+	HRESULT SetValue(REFPROPERTYKEY key,int8_t);
+
+	HRESULT SetTagFromStringProp(REFPROPERTYKEY key,const std::string &tagName);
+	HRESULT SetTagFromIntProp(REFPROPERTYKEY key,const std::string &tagName, int scale);
 public:
 
 	PropExtCL();

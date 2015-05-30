@@ -94,16 +94,20 @@
     <ClCompile Include="extCl_LoadProperties.cpp" />
     <ClCompile Include="extCl_IPropStoreCapabilities.cpp" />
     <ClCompile Include="extCl_SaveProperties.cpp" />
+    <ClCompile Include="pkeys.cpp" />
     <ClCompile Include="psfParser.cpp" />
     <ClCompile Include="register.cpp" />
+    <ClCompile Include="tagmap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globals.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="extCl.h" />
     <ClInclude Include="guids.h" />
+    <ClInclude Include="pkeys.h" />
     <ClInclude Include="psfParser.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="string2int_t.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="psf.propdesc">

@@ -45,6 +45,12 @@
     <ClCompile Include="psfParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tagmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pkeys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -63,6 +69,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pkeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="string2int_t.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

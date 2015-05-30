@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <propertyDescriptionList xmlns="http://schemas.microsoft.com/windows/2006/propertydescription">
-	<propertyDescription name="PCF.System" formatID="{F2CCDAAC-FC61-423A-A7BC-BBE6BF738637}" propID="2">
+	<propertyDescription name="PSF.System" formatID="{F2CCDAAC-FC61-423A-A7BC-BBE6BF738637}" propID="2">
 		<searchInfo maxSize="1" />
 		<labelInfo label="Emulated System" />
 		<typeInfo type="byte" groupingRange="Discrete" isInnate="true" isViewable="true"/>
@@ -20,10 +20,10 @@
 		</displayInfo>
 	</propertyDescription>
 
-	<propertyDescription name="PCF.SNSF.SRAMFill" formatID="{387FE3B9-12CF-4A56-ADA0-BE2DDD6B4FC0}" propID="3">
+	<propertyDescription name="PSF.SNSF.SRAMFill" formatID="{387FE3B9-12CF-4A56-ADA0-BE2DDD6B4FC0}" propID="3">
 		<typeInfo type="byte" />
 	</propertyDescription>
-	<propertyDescription name="PCF.SNSF.VideoMode" formatID="{9CCEBA8C-844C-44F7-B576-AD52B3E51471}" propID="4">
+	<propertyDescription name="PSF.SNSF.VideoMode" formatID="{9CCEBA8C-844C-44F7-B576-AD52B3E51471}" propID="4">
 		<typeInfo type="String" />
 		<displayInfo displayType="Enumeration">
 			<enumeratedList>
@@ -32,7 +32,7 @@
 			</enumeratedList>
 		</displayInfo>
 	</propertyDescription>
-	<propertyDescription name="PCF.SNSF.MemoryMap" formatID="{0F5835A6-C773-4C9E-A0AD-9C55DDFC26A0}" propID="5">
+	<propertyDescription name="PSF.SNSF.MemoryMap" formatID="{0F5835A6-C773-4C9E-A0AD-9C55DDFC26A0}" propID="5">
 		<typeInfo type="String" />
 		<displayInfo displayType="Enumeration">
 			<enumeratedList>
@@ -42,16 +42,16 @@
 		</displayInfo>
 	</propertyDescription>
 	
-	<propertyDescription name="PCF.USF.EnableCompare" formatID="{6C91FEE0-F5BB-4EF2-A583-BA53452CB510}" propID="6">
+	<propertyDescription name="PSF.USF.EnableCompare" formatID="{6C91FEE0-F5BB-4EF2-A583-BA53452CB510}" propID="6">
 		<typeInfo type="Boolean"/>
 	</propertyDescription>
-	<propertyDescription name="PCF.USF.FIFOFull" formatID="{117184EB-AACE-4372-99AA-BCAE5E02EAF8}" propID="7">
+	<propertyDescription name="PSF.USF.FIFOFull" formatID="{117184EB-AACE-4372-99AA-BCAE5E02EAF8}" propID="7">
 		<typeInfo type="Boolean"/>
 	</propertyDescription>
-	<propertyDescription name="PCF.Mini.Library" formatID="{55F9856C-ADC9-4120-9BEA-7E861AB5A05B}" propID="8">
+	<propertyDescription name="PSF.Mini.Library" formatID="{55F9856C-ADC9-4120-9BEA-7E861AB5A05B}" propID="8">
 		<typeInfo type="String" multipleValues="true" />
 	</propertyDescription>
-	<propertyDescription name="PCF.RefreshRate" formatID="{CBAABC05-9017-4F42-91D0-A0EC31229AEB}" propID="9">
+	<propertyDescription name="PSF.RefreshRate" formatID="{CBAABC05-9017-4F42-91D0-A0EC31229AEB}" propID="9">
 		<typeInfo type="Byte" groupingRange="Discrete" isViewable="true"/>
 		<labelInfo label="System Refreshrate" />
 		<displayInfo displayType="Enumeration">
@@ -62,15 +62,24 @@
 		</displayInfo>
 	</propertyDescription>
 
-	<propertyDescription name="PCF.NCSF.FadeTime" formatID="{D42F2E05-3144-4F3B-81F4-3855B0FB1B4B}" propID="10">
+	<propertyDescription name="PSF.FadeTime" formatID="{D42F2E05-3144-4F3B-81F4-3855B0FB1B4B}" propID="10">
 		<typeInfo isViewable="true" type="UInt64"/>
 		<labelInfo label="Fadeout Time" />
-		<displayInfo displayType="DateTime" relativeDescriptionType="Number">
+		<displayInfo displayType="DateTime" relativeDescriptionType="Duration">
 			<numberFormat formatAs="Duration" />
 		</displayInfo>
 	</propertyDescription>
-	<propertyDescription name="PCF.SNSF.HasSRAM" formatID="{E4860D5A-C395-404D-A71E-21C5D033A1F3}" propID="11">
+	<propertyDescription name="PSF.SNSF.HasSRAM" formatID="{E4860D5A-C395-404D-A71E-21C5D033A1F3}" propID="11">
 		<typeInfo type="Boolean" isInnate="true" isViewable="true"/>
 		<labelInfo label="Has SRAM" />
+	</propertyDescription>
+
+	<propertyDescription name="PSF.NCSF.SDat" formatID="{42F472CD-7CF8-49FF-A517-660D2CF60DEB}" propID="12">
+		<typeInfo type="String" isInnate="true" isViewable="true" canBePurged="true" isQueryable="true"/>
+		<labelInfo label="Original SDAT File" />
+	</propertyDescription>
+	<propertyDescription name="PSF.OrginalFile" formatID="{20FB923B-5A15-4DEB-8FE3-3D62EB1DEF4E}" propID="13">
+		<typeInfo type="String" isInnate="true" isViewable="true" canBePurged="true"/>
+		<labelInfo label="Original File" />
 	</propertyDescription>
 </propertyDescriptionList>

@@ -2,9 +2,6 @@
 #include "psfParser.h"
 #include <cstring>
 
-#define retIfFail { if(!SUCCEEDED(hresult)) return hresult; }
-#define retIfNonOk if(hresult==S_FALSE) { return E_FAIL; } else retIfFail
-
 PsfParser::PsfParser(IStream *_stream) : stream(_stream) {
 	stream->AddRef();
 }

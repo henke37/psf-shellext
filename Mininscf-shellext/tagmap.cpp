@@ -1,6 +1,7 @@
 #include "guids.h"
 #include <propkey.h>
 #include <string>
+#include <sstream>
 #include <memory>
 #include "extCl.h"
 #include <Propvarutil.h>
@@ -93,6 +94,32 @@ HRESULT PropExtCL::SetTagFromStringProp(REFPROPERTYKEY pkey,const std::string &t
 		parser->tags.insert(std::make_pair(tagName,value));
 
 		delete[] chrStr;//TODO: use a smart ptr here to avoid leaking meory on errors
+
+		return S_OK;
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
+	}
+}
+
+HRESULT PropExtCL::SetTagFromIntProp(REFPROPERTYKEY pkey,const std::string &tagName,int scale) {
+	PROPVARIANT propVar;
+	HRESULT hresult;
+	uint64_t intVal;
+
+	try {
+		hresult=propCache->GetValue(pkey,&propVar);
+		retIfFail;
+
+		hresult=PropVariantToUInt64(propVar,&intVal);
+		retIfFail;
+
+		intVal/=scale;
+
+		std::stringstream tagValStrm;
+		tagValStrm << intVal;
+
+
+		parser->tags.insert(std::make_pair(tagName,tagValStrm.str()));
 
 		return S_OK;
 	} catch (std::bad_alloc ba) {

@@ -98,6 +98,7 @@
     <ClCompile Include="pkeys.cpp" />
     <ClCompile Include="psfParser.cpp" />
     <ClCompile Include="register.cpp" />
+    <ClCompile Include="str2uint.cpp" />
     <ClCompile Include="tagmap.cpp" />
   </ItemGroup>
   <ItemGroup>

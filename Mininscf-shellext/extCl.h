@@ -27,8 +27,6 @@ class PropExtCL : IUnknown, IInitializeWithStream, IPropertyStore, IPropertyStor
 	HRESULT SetValue(REFPROPERTYKEY key,int32_t);
 	HRESULT SetValue(REFPROPERTYKEY key,uint16_t);
 	HRESULT SetValue(REFPROPERTYKEY key,int16_t);
-	HRESULT SetValue(REFPROPERTYKEY key,uint8_t);
-	HRESULT SetValue(REFPROPERTYKEY key,int8_t);
 
 	HRESULT SetTagFromStringProp(REFPROPERTYKEY key,const std::string &tagName);
 	HRESULT SetTagFromIntProp(REFPROPERTYKEY key,const std::string &tagName, int scale);

@@ -10,8 +10,11 @@
 
 #define DllExport extern "C" __declspec( dllexport ) 
 
-#define retIfFail { if(!SUCCEEDED(hresult)) return hresult; }
-#define retIfNonOk if(hresult==S_FALSE) { return E_FAIL; } else retIfFail
+#define retIfFail { if(!SUCCEEDED(hresult)) \
+	return hresult; }
+#define retIfNonOk if(hresult==S_FALSE) { \
+	return E_FAIL; } \
+	else retIfFail
 
 
 #endif

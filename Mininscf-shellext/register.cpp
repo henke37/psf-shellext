@@ -4,6 +4,7 @@
 #include <string.h>
 #include <tchar.h>
 #include "globals.h"
+#include <new>
 
 DllExport HRESULT __stdcall DllRegisterServer(void);
 DllExport HRESULT __stdcall DllUnregisterServer(void);
@@ -37,6 +38,8 @@ static const LPTCH extensions[extCount]= {
 HRESULT __stdcall DllRegisterServer(void) {
 	LSTATUS status;
 	//HRESULT hresult;
+
+	try {
 	
 	TCHAR dllPath[MAX_PATH];
 	//include the terminator, must be in octets
@@ -157,6 +160,10 @@ HRESULT __stdcall DllRegisterServer(void) {
 	
 	SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,NULL,NULL);
 	return S_OK;
+
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
+	}
 }
 
 HRESULT __stdcall DllUnregisterServer(void) {

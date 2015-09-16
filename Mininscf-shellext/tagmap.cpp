@@ -1,11 +1,12 @@
 #include "guids.h"
 #include <propkey.h>
 #include <string>
+#include <memory>
 #include "extCl.h"
 #include <Propvarutil.h>
 #include "pkeys.h"
 #include "string2int_t.h"
-
+#include "psfParser.h"
 
 #define DURATIONSCALE 10000
 
@@ -29,35 +30,72 @@ HRESULT PropExtCL::storeTagAsProp(const std::string &tagName, const std::string 
 		return SetValue(PKEY_Media_Year,str2uint32_t(tagValue));
 	} else if(tagName=="track") {
 		return SetValue(PKEY_Music_TrackNumber,str2uint32_t(tagValue));
+	} else if(tagName=="fade") {
+		return SetValue(PKEY_PSF_FadeTime,str2uint64_t(tagValue)*DURATIONSCALE);
 	}
 
 	return E_FAIL;
 
 }
 
-
-
 HRESULT PropExtCL::storePropAsTag(REFPROPERTYKEY key) {
-#define StringProp(pkey, tag) if(key==pkey) { \
-	return SetTagFromStringProp(pkey, tag); \
+	try {
+	#define StringProp(pkey, tag) if(key==pkey) { \
+		return SetTagFromStringProp(pkey, tag); \
+		}
+
+	#define IntProp(pkey, tag, scale) if(key==pkey) { \
+		return SetTagFromIntProp(pkey, tag, scale); \
+		}
+
+		StringProp(PKEY_Title,"title")
+		else StringProp(PKEY_Music_Artist,"artist")
+		else StringProp(PKEY_Software_ProductName,"game")
+		else StringProp(PKEY_Music_Genre,"genre")
+		else StringProp(PKEY_Comment,"comment")
+		else StringProp(PKEY_Copyright,"copyright")
+		else StringProp(PKEY_PSF_Mini_Library,"_lib") //TODO: deal with multiple values
+		else IntProp(PKEY_Media_Duration,"length",DURATIONSCALE)
+		else IntProp(PKEY_PSF_FadeTime,"fade",DURATIONSCALE)
+		else IntProp(PKEY_Media_Year,"year",1)
+
+	#undef StringProp
+	#undef IntProp
+
+		return E_FAIL;
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
 	}
+}
 
-#define IntProp(pkey, tag, scale) if(key==pkey) { \
-	return SetTagFromIntProp(pkey, tag, scale); \
+HRESULT PropExtCL::SetTagFromStringProp(REFPROPERTYKEY pkey,const std::string &tagName) {
+	PROPVARIANT propVar;
+	HRESULT hresult;
+	int chrStrLen;
+	char *chrStr;
+	WCHAR *wchrStr;
+	try {
+
+		hresult=propCache->GetValue(pkey,&propVar);
+		retIfFail;
+
+		hresult=PropVariantToStringAlloc(propVar,&wchrStr);
+		retIfFail;
+
+		chrStrLen=WideCharToMultiByte(CP_UTF8,0,wchrStr,-1,NULL,0,NULL,NULL);
+		chrStr=new char[chrStrLen];
+		WideCharToMultiByte(CP_UTF8,0,wchrStr,-1,chrStr,chrStrLen,NULL,NULL);
+	
+		CoTaskMemFree(wchrStr);
+
+		std::string value=chrStr;
+
+		parser->tags.insert(std::make_pair(tagName,value));
+
+		delete[] chrStr;//TODO: use a smart ptr here to avoid leaking meory on errors
+
+		return S_OK;
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
 	}
-
-	StringProp(PKEY_Title,"title")
-	else StringProp(PKEY_Music_Artist,"artist")
-	else StringProp(PKEY_Software_ProductName,"game")
-	else StringProp(PKEY_Music_Genre,"genre")
-	else StringProp(PKEY_Comment,"comment")
-	else StringProp(PKEY_Copyright,"copyright")
-	else StringProp(PKEY_PSF_Mini_Library,"_lib") //TODO: deal with multiple values
-	else IntProp(PKEY_Media_Duration,"length",DURATIONSCALE)
-	else IntProp(PKEY_Media_Year,"year",1)
-
-#undef StringProp
-#undef IntProp
-
-	return E_FAIL;
 }

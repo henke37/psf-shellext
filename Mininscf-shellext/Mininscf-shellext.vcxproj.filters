@@ -51,6 +51,9 @@
     <ClCompile Include="pkeys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="extCl_SetValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">

@@ -8,28 +8,33 @@ HRESULT PropExtCL::LoadProperties() {
 	HRESULT hresult;
 	assert(contentStream);
 
-	hresult=PSCreateMemoryPropertyStore(IID_IPropertyStoreCache,(LPVOID *)&propCache);
-	if(!SUCCEEDED(hresult)) {
-		return hresult;
-	}
+	try {
 
-	parser=new(std::nothrow) PsfParser(contentStream);
-	if(!parser) return E_OUTOFMEMORY;
+		hresult=PSCreateMemoryPropertyStore(IID_IPropertyStoreCache,(LPVOID *)&propCache);
+		if(!SUCCEEDED(hresult)) {
+			return hresult;
+		}
 
-	hresult=parser->parse();
-	retIfFail;
+		parser=new PsfParser(contentStream);
 
-	hresult=SetValue(PKEY_PSF_FMTID,(uint8_t)parser->version);
-	retIfFail;
-
-	for(auto &kv: parser->tags) {
-		auto &key=kv.first;
-		auto &value=kv.second;
-
-		hresult=storeTagAsProp(key,value);
+		hresult=parser->parse();
 		retIfFail;
-	}
 
-	return S_OK;
+		hresult=SetValue(PKEY_PSF_FMTID,(uint8_t)parser->version);
+		retIfFail;
+
+		for(auto &kv: parser->tags) {
+			auto &key=kv.first;
+			auto &value=kv.second;
+
+			hresult=storeTagAsProp(key,value);
+			retIfFail;
+		}
+
+		return S_OK;
+
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
+	}
 
 }

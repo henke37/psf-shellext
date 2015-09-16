@@ -74,12 +74,17 @@ STDAPI DllGetClassObject(
   _In_  REFIID   riid,
   _Out_ LPVOID   *ppv
 ) {
-	if(riid==IID_IClassFactory) {
-		*ppv=new ClassFactory();
-		return S_OK;
-	}
+	try {
 
-	return CLASS_E_CLASSNOTAVAILABLE;
+		if(riid==IID_IClassFactory) {
+			*ppv=new ClassFactory();
+			return S_OK;
+		}
+
+		return CLASS_E_CLASSNOTAVAILABLE; 
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
+	}
 }
 
 ClassFactory::ClassFactory() : useCount(1) {
@@ -113,19 +118,19 @@ HRESULT STDMETHODCALLTYPE ClassFactory::CreateInstance(
 	_In_opt_  IUnknown *pUnkOuter,
 	_In_  REFIID riid,
 	_COM_Outptr_  void **ppvObject) {
-	if(pUnkOuter) return CLASS_E_NOAGGREGATION;
+	try {
+		if(pUnkOuter) return CLASS_E_NOAGGREGATION;
 
-	PropExtCL *cl=new(std::nothrow) PropExtCL();
+		PropExtCL *cl=new PropExtCL();
 
-	if(!cl) {
+		HRESULT hasInterface=cl->QueryInterface(riid,ppvObject);
+
+		if(!SUCCEEDED(hasInterface)) {
+			cl->Release();
+		}
+
+		return hasInterface;
+	} catch (std::bad_alloc ba) {
 		return E_OUTOFMEMORY;
 	}
-
-	HRESULT hasInterface=cl->QueryInterface(riid,ppvObject);
-
-	if(!SUCCEEDED(hasInterface)) {
-		cl->Release();
-	}
-
-	return hasInterface;
 }

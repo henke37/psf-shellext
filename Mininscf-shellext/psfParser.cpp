@@ -86,97 +86,106 @@ HRESULT PsfParser::parseTags() {
 	std::string value;
 
 	//TODO: deal with the case of no tags at all in the existing file
+	try {
 
-	do {
-		CHAR readBuff[ReadBuffLen];
-		ULONG bytesRead;
-		hresult=stream->Read(readBuff,ReadBuffLen,&bytesRead);
-		retIfFail;
+		do {
+			CHAR readBuff[ReadBuffLen];
+			ULONG bytesRead;
+			hresult=stream->Read(readBuff,ReadBuffLen,&bytesRead);
+			retIfFail;
 
-		for(ULONG i=0;i<bytesRead;++i) {
-			CHAR &c=readBuff[i];
+			for(ULONG i=0;i<bytesRead;++i) {
+				CHAR &c=readBuff[i];
 
-			if(c=='=') {
-				//TODO: trim whitespace
-				inName=false;
-			} else if(c=='\r') {
-			} else if(c=='\n') {
-				inName=true;
+				if(c=='=') {
+					//TODO: trim whitespace
+					inName=false;
+				} else if(c=='\r') {
+				} else if(c=='\n') {
+					inName=true;
 
-				//TODO: trim whitespace
+					//TODO: trim whitespace
 
-				auto existingItr=tags.find(name);
-				if(existingItr!=tags.end()) {
-					existingItr->second+="\n";
-					existingItr->second+=value;
+					auto existingItr=tags.find(name);
+					if(existingItr!=tags.end()) {
+						existingItr->second+="\n";
+						existingItr->second+=value;
+					} else {
+						tags.insert(std::make_pair(name,value));
+					}
+					name.clear();
+					value.clear();
+				} else if(inName) {
+					name+=c;
 				} else {
-					tags.insert(std::make_pair(name,value));
+					value+=c;
 				}
-				name.clear();
-				value.clear();
-			} else if(inName) {
-				name+=c;
-			} else {
-				value+=c;
+
 			}
+		} while(hresult==S_OK);
 
-		}
-	} while(hresult==S_OK);
-
-	return S_OK;
+		return S_OK;
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
+	}
 }
 
 HRESULT PsfParser::saveTags() {
 	HRESULT hresult;
 	ULONG bytesWritten;
 
-	LARGE_INTEGER seekPos;
-	seekPos.QuadPart=tagStart.QuadPart;
-	hresult=stream->Seek(seekPos,STREAM_SEEK_SET,nullptr);
-	retIfFail;
+	try {
 
-	for(auto &kv: tags) {
-		auto &key=kv.first;
-		auto &value=kv.second;
+		LARGE_INTEGER seekPos;
+		seekPos.QuadPart=tagStart.QuadPart;
+		hresult=stream->Seek(seekPos,STREAM_SEEK_SET,nullptr);
+		retIfFail;
 
-		const char *keyBuff=key.c_str();
-		const char *valueBuff=value.c_str();
+		for(auto &kv: tags) {
+			auto &key=kv.first;
+			auto &value=kv.second;
 
-		//such a mess for newline values
+			const char *keyBuff=key.c_str();
+			const char *valueBuff=value.c_str();
 
-		const char *lineStart=keyBuff;
-		for(;;) {
-			const char *lineEnd=std::strstr(lineStart,"\n");
-			bool lastLine= !lineEnd;
-			int lineLen;
-			if(lastLine) {
-				lineLen=std::strlen(lineStart);
-				lineEnd=lineStart+lineLen;
-			} else {
-				lineLen=lineStart-lineEnd;
+			//such a mess for newline values
+
+			const char *lineStart=keyBuff;
+			for(;;) {
+				const char *lineEnd=std::strstr(lineStart,"\n");
+				bool lastLine= !lineEnd;
+				int lineLen;
+				if(lastLine) {
+					lineLen=std::strlen(lineStart);
+					lineEnd=lineStart+lineLen;
+				} else {
+					lineLen=lineStart-lineEnd;
+				}
+
+				hresult=stream->Write(keyBuff,key.length(),&bytesWritten);
+				retIfFail;
+
+				char eq[]={'='};
+				hresult=stream->Write(eq,1,&bytesWritten);
+				retIfFail;
+
+				stream->Write(lineStart,lineLen,&bytesWritten);
+				retIfFail;
+
+				char nl[]={'\n'};
+				hresult=stream->Write(nl,1,&bytesWritten);
+				retIfFail;
+
+				if(lastLine) {
+					break;
+				}
+
+				lineStart=lineEnd+1;
 			}
-
-			hresult=stream->Write(keyBuff,key.length(),&bytesWritten);
-			retIfFail;
-
-			char eq[]={'='};
-			hresult=stream->Write(eq,1,&bytesWritten);
-			retIfFail;
-
-			stream->Write(lineStart,lineLen,&bytesWritten);
-			retIfFail;
-
-			char nl[]={'\n'};
-			hresult=stream->Write(nl,1,&bytesWritten);
-			retIfFail;
-
-			if(lastLine) {
-				break;
-			}
-
-			lineStart=lineEnd+1;
 		}
-	}
 
-	return S_OK;
+		return S_OK;
+	} catch (std::bad_alloc ba) {
+		return E_OUTOFMEMORY;
+	}
 }

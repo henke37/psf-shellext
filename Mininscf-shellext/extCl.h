@@ -7,6 +7,7 @@
 #include <Propsys.h>
 #include <string>
 #include <cstdint>
+#include <atomic>
 
 class PsfParser;
 
@@ -73,7 +74,7 @@ public:
 private:
 	bool initialized;
 	bool readOnlyMode;
-	ULONG useCount;
+	std::atomic<int> useCount;
 	IStream *contentStream;
 	IPropertyStoreCache *propCache;
 	PsfParser *parser;

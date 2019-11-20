@@ -5,8 +5,9 @@
 #include "classFactory.h"
 #include <new>
 #include <assert.h>
+#include <atomic>
 
-int dllUseCount=0;
+std::atomic<int> dllUseCount=0;
 
 STDAPI DllCanUnloadNow(void);
 STDAPI DllGetClassObject(

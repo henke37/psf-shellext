@@ -2,6 +2,7 @@
 #define CLASS_FACTORY_H
 
 #include "common.h"
+#include <atomic>
 
 template<class T> class ClassFactory : IClassFactory {
 public:
@@ -83,7 +84,7 @@ public:
 		return E_NOINTERFACE;
 	}
 private:
-	ULONG useCount;
+	std::atomic<int> useCount;
 };
 
 #endif

@@ -64,6 +64,7 @@ public:
 		if(useCount==0) {
 			delete(this);
 			dllUseCount--;
+			return 0;
 		}
 
 		return useCount;

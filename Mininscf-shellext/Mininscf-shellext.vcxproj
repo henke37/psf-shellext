@@ -86,7 +86,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="classFactory.cpp" />
     <ClCompile Include="comSrv.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ExtClCom.cpp" />

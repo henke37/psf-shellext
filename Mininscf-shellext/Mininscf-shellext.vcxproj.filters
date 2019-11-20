@@ -57,9 +57,6 @@
     <ClCompile Include="str2uint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="classFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "globals.h"
 #include "extCl.h"
+#include "classFactory.h"
 #include <new>
 #include <assert.h>
 
@@ -13,53 +14,6 @@ STDAPI DllGetClassObject(
   _Out_ LPVOID   *ppv
 );
 
-class ClassFactory : IClassFactory {
-	~ClassFactory();
-
-public:
-
-	ClassFactory();
-
-	HRESULT STDMETHODCALLTYPE QueryInterface( 
-    /* [in] */ REFIID riid,
-    /* [iid_is][out] */ _COM_Outptr_ void __RPC_FAR *__RPC_FAR *ppvObject);
-
-	ULONG STDMETHODCALLTYPE AddRef() {
-		return ++useCount;
-	}
-
-	ULONG STDMETHODCALLTYPE Release() {
-		assert(useCount > 0);
-		useCount--;
-
-		if(useCount==0) {
-			delete(this);
-			dllUseCount--;
-		}
-
-		return useCount;
-	}
-
-	HRESULT STDMETHODCALLTYPE LockServer(BOOL fLock) {
-		if(fLock) {
-			AddRef();
-		} else {
-			Release();
-		}
-
-		return S_OK;
-	}
-
-	HRESULT STDMETHODCALLTYPE CreateInstance( 
-            /* [annotation][unique][in] */ 
-            _In_opt_  IUnknown *pUnkOuter,
-            /* [annotation][in] */ 
-            _In_  REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-private:
-	ULONG useCount;
-};
 
 STDAPI DllCanUnloadNow() {
 	if(dllUseCount==0) {
@@ -77,59 +31,11 @@ STDAPI DllGetClassObject(
 	try {
 
 		if(riid==IID_IClassFactory) {
-			*ppv=new ClassFactory();
+			*ppv=new ClassFactory<PropExtCL>();
 			return S_OK;
 		}
 
 		return CLASS_E_CLASSNOTAVAILABLE; 
-	} catch (std::bad_alloc ba) {
-		return E_OUTOFMEMORY;
-	}
-}
-
-ClassFactory::ClassFactory() : useCount(1) {
-	dllUseCount++;
-}
-
-ClassFactory::~ClassFactory() {
-	assert(dllUseCount > 0);
-	assert(useCount == 0);
-	dllUseCount--;
-}
-
-HRESULT ClassFactory::QueryInterface(REFIID riid,_COM_Outptr_ void __RPC_FAR *__RPC_FAR *ppvObject) {
-	if(!ppvObject) return E_POINTER;
-
-	if(riid==IID_IUnknown) {
-		*ppvObject=(IUnknown*)this;
-		AddRef();
-		return S_OK;
-	} else if(riid==IID_IClassFactory) {
-		*ppvObject=(IClassFactory*)this;
-		AddRef();
-		return S_OK;
-	}
-
-	*ppvObject=NULL;
-	return E_NOINTERFACE;
-}
-
-HRESULT STDMETHODCALLTYPE ClassFactory::CreateInstance( 
-	_In_opt_  IUnknown *pUnkOuter,
-	_In_  REFIID riid,
-	_COM_Outptr_  void **ppvObject) {
-	try {
-		if(pUnkOuter) return CLASS_E_NOAGGREGATION;
-
-		PropExtCL *cl=new PropExtCL();
-
-		HRESULT hasInterface=cl->QueryInterface(riid,ppvObject);
-
-		if(!SUCCEEDED(hasInterface)) {
-			cl->Release();
-		}
-
-		return hasInterface;
 	} catch (std::bad_alloc ba) {
 		return E_OUTOFMEMORY;
 	}

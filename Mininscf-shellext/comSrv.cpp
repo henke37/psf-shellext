@@ -9,14 +9,6 @@
 
 std::atomic<int> dllUseCount=0;
 
-STDAPI DllCanUnloadNow(void);
-STDAPI DllGetClassObject(
-  _In_  REFCLSID rclsid,
-  _In_  REFIID   riid,
-  _Out_ LPVOID   *ppv
-);
-
-
 STDAPI DllCanUnloadNow() {
 	if(dllUseCount==0) {
 		return S_OK;
@@ -38,6 +30,7 @@ STDAPI DllGetClassObject(
   _In_  REFIID   riid,
   _Out_ LPVOID   *ppv
 ) {
+	if (!ppv) return E_POINTER;
 	try {
 		if (rclsid == PropExtCL_GUID) return MakeFactory<PropExtCL>(riid,ppv);
 		return CLASS_E_CLASSNOTAVAILABLE; 
